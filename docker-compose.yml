@@ -1,0 +1,18 @@
+services:
+  qpub-dashboard:
+    build: .
+    ports:
+      - "3004:3004"
+    environment:
+      APP_URL: http://localhost:3004
+      DASHBOARD_SECRET: ${DASHBOARD_SECRET:-dev-dashboard-secret-change-me}
+      DASHBOARD_ADMIN_USER: ${DASHBOARD_ADMIN_USER:-admin}
+      DASHBOARD_ADMIN_PASSWORD: ${DASHBOARD_ADMIN_PASSWORD:-admin}
+      DASHBOARD_DATA_DIR: /app/data
+      QPUB_SERVER_CONTROL_URL: ${QPUB_SERVER_CONTROL_URL:-http://host.docker.internal:8091}
+      CONTROL_API_TOKEN: ${CONTROL_API_TOKEN:-}
+    volumes:
+      - dashboard-data:/app/data
+
+volumes:
+  dashboard-data:

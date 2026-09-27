@@ -1,0 +1,6 @@
+@import "@qpub/qui/globals.css";
+@import "@qpub/qui/themes/terminal.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
