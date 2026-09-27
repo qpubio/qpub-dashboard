@@ -10,7 +10,7 @@ export function StatStrip({ stats, className }: { stats: Stat[]; className?: str
           <div className="font-mono text-[10px] uppercase tracking-wide text-muted">
             {s.label}
           </div>
-          <div className="font-mono text-lg tabular-nums">{s.value}</div>
+          <div className="font-mono text-lg tabular-nums text-foreground">{s.value}</div>
           {s.hint ? <div className="text-xs text-muted">{s.hint}</div> : null}
         </div>
       ))}

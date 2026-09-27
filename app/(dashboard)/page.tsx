@@ -1,5 +1,6 @@
 "use client";
 
+import { DataPanel } from "@/components/shared/DataPanel";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { StatStrip } from "@/components/shared/StatStrip";
 import { useOverview } from "@/lib/hooks/useOverview";
@@ -31,7 +32,7 @@ export default function OverviewPage() {
               { label: "Dropped", value: formatNum(stats["msg:drop"]) },
             ]}
           />
-          <div className="border border-border">
+          <DataPanel>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -62,7 +63,7 @@ export default function OverviewPage() {
                 ))}
               </TableBody>
             </Table>
-          </div>
+          </DataPanel>
         </>
       ) : null}
     </div>

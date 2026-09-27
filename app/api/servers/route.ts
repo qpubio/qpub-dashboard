@@ -25,12 +25,20 @@ export async function POST(req: NextRequest) {
     id?: string;
     name: string;
     control_url: string;
-    control_token: string;
+    control_token?: string;
   };
   if (!body.name || !body.control_url) {
     return NextResponse.json({ error: "name and control_url required" }, { status: 400 });
   }
-  const row = upsertServer(body);
+  if (!body.id && !body.control_token?.trim()) {
+    return NextResponse.json({ error: "control_token required for new server" }, { status: 400 });
+  }
+  let row: ReturnType<typeof upsertServer>;
+  try {
+    row = upsertServer(body);
+  } catch {
+    return NextResponse.json({ error: "control_token required for new server" }, { status: 400 });
+  }
   await healthCheck(row.id);
   insertAudit({
     severity: "info",

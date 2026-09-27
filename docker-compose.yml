@@ -5,7 +5,7 @@ services:
       - "3004:3004"
     environment:
       APP_URL: http://localhost:3004
-      DASHBOARD_SECRET: ${DASHBOARD_SECRET:-dev-dashboard-secret-change-me}
+      DASHBOARD_SECRET: ${DASHBOARD_SECRET:-dev-dashboard-secret-change-me-32chars}
       DASHBOARD_ADMIN_USER: ${DASHBOARD_ADMIN_USER:-admin}
       DASHBOARD_ADMIN_PASSWORD: ${DASHBOARD_ADMIN_PASSWORD:-admin}
       DASHBOARD_DATA_DIR: /app/data

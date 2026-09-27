@@ -17,6 +17,7 @@ import {
 import { navItems } from "./nav";
 import { LogOut } from "lucide-react";
 import { apiFetch } from "@/lib/api/client";
+import { ThemeToggle } from "./ThemeToggle";
 
 export function DashboardSidebar() {
   const pathname = usePathname();
@@ -30,7 +31,9 @@ export function DashboardSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="border-b border-border px-3 py-3">
-        <div className="font-mono text-sm font-semibold tracking-tight">qpub-dashboard</div>
+        <div className="font-mono text-sm font-semibold tracking-tight text-foreground">
+          qpub-dashboard
+        </div>
         <div className="text-xs text-muted">control plane</div>
       </SidebarHeader>
       <SidebarContent>
@@ -57,7 +60,8 @@ export function DashboardSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="border-t border-border p-2">
+      <SidebarFooter className="border-t border-border p-2 space-y-1">
+        <ThemeToggle />
         <Button variant="ghost" className="w-full justify-start" onClick={logout}>
           <LogOut className="size-4" />
           Log out

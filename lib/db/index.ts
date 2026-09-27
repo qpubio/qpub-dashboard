@@ -2,7 +2,7 @@ import Database from "better-sqlite3";
 import fs from "fs";
 import path from "path";
 import { env } from "@/config/env";
-import { encryptSecret } from "@/lib/crypto/secrets";
+import { decryptSecret, encryptSecret } from "@/lib/crypto/secrets";
 
 export type ServerRow = {
   id: string;
@@ -92,6 +92,40 @@ function seedServers(database: Database.Database) {
   }
 }
 
+/** Apply CONTROL_API_TOKEN / QPUB_SERVER_CONTROL_URL from env on each process start. */
+function syncEnvCredentials(database: Database.Database) {
+  const token = env.controlToken?.trim();
+  const url = env.controlUrl?.replace(/\/$/, "");
+  if (!token && !url) return;
+
+  const rows = database.prepare("SELECT * FROM servers").all() as ServerRow[];
+  if (rows.length === 0) return;
+
+  let targets: ServerRow[] = [];
+  if (url) {
+    targets = rows.filter((r) => r.control_url === url);
+    if (targets.length === 0) {
+      const def = rows.find((r) => r.name === "default");
+      if (def) targets = [def];
+    }
+  } else if (rows.length === 1) {
+    targets = rows;
+  }
+
+  if (targets.length === 0) return;
+
+  const enc = token ? encryptSecret(token, env.dashboardSecret) : null;
+  const updateToken = database.prepare(
+    "UPDATE servers SET control_token_enc = ? WHERE id = ?",
+  );
+  const updateUrl = database.prepare("UPDATE servers SET control_url = ? WHERE id = ?");
+
+  for (const row of targets) {
+    if (enc) updateToken.run(enc, row.id);
+    if (url && row.control_url !== url) updateUrl.run(url, row.id);
+  }
+}
+
 export function getDb(): Database.Database {
   if (db) return db;
   fs.mkdirSync(env.dataDir, { recursive: true });
@@ -99,6 +133,7 @@ export function getDb(): Database.Database {
   db = new Database(file);
   migrate(db);
   seedServers(db);
+  syncEnvCredentials(db);
   return db;
 }
 
@@ -114,11 +149,16 @@ export function upsertServer(input: {
   id?: string;
   name: string;
   control_url: string;
-  control_token: string;
+  control_token?: string;
 }): ServerRow {
   const id = input.id ?? crypto.randomUUID();
   const database = getDb();
-  const enc = encryptSecret(input.control_token, env.dashboardSecret);
+  const existing = input.id ? getServer(input.id) : undefined;
+  const token = input.control_token?.trim();
+  if (!token && !existing) {
+    throw new Error("control_token required for new server");
+  }
+  const enc = encryptSecret(token || decryptSecret(existing!.control_token_enc, env.dashboardSecret), env.dashboardSecret);
   database
     .prepare(
       `INSERT INTO servers (id, name, control_url, control_token_enc)

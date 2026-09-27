@@ -1,5 +1,6 @@
 import { getIronSession, SessionOptions } from "iron-session";
 import { cookies } from "next/headers";
+import { env } from "@/config/env";
 
 export type SessionData = {
   user?: string;
@@ -7,7 +8,7 @@ export type SessionData = {
 };
 
 export const sessionOptions: SessionOptions = {
-  password: process.env.DASHBOARD_SECRET ?? "dev-dashboard-secret-change-me",
+  password: env.dashboardSecret,
   cookieName: "qpub_dashboard_session",
   cookieOptions: {
     secure: process.env.NODE_ENV === "production",

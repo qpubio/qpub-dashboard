@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { DataPanel } from "@/components/shared/DataPanel";
 import { PageHeader } from "@/components/shared/PageHeader";
-import { useActiveServerId } from "@/components/shared/ServerScopePicker";
+import { TenantScopePicker } from "@/components/shared/TenantScopePicker";
+import { useTenantScope } from "@/lib/hooks/useTenantScope";
 import { controlGet, controlMutate } from "@/lib/hooks/useControl";
 import type { APIKey } from "@/lib/control/types";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -26,42 +27,38 @@ import {
 import { Plus } from "lucide-react";
 
 export default function ApiKeysPage() {
-  const serverId = useActiveServerId();
-  const searchParams = useSearchParams();
-  const tenantId = Number(searchParams.get("tenant") ?? "1");
+  const scope = useTenantScope();
+  const { serverId, tenantId, ready } = scope;
   const qc = useQueryClient();
-  const [tenantInput, setTenantInput] = useState(String(tenantId));
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [revealed, setRevealed] = useState<string | null>(null);
 
-  const tid = Number(tenantInput) || tenantId;
-
-  const { data, isLoading } = useQuery({
-    queryKey: ["keys", serverId, tid],
-    enabled: Boolean(serverId) && tid > 0,
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["keys", serverId, tenantId],
+    enabled: ready,
     queryFn: async () => {
-      const res = await controlGet<{ keys: APIKey[] }>(serverId!, `tenants/${tid}/keys`);
+      const res = await controlGet<{ keys: APIKey[] }>(serverId!, `tenants/${tenantId}/keys`);
       return res.keys;
     },
   });
 
   async function createKey() {
-    if (!serverId) return;
-    const key = await controlMutate<APIKey>(serverId, "POST", `tenants/${tid}/keys`, {
+    if (!serverId || !tenantId) return;
+    const key = await controlMutate<APIKey>(serverId, "POST", `tenants/${tenantId}/keys`, {
       name,
       permission: {},
     });
     setRevealed(key.secret_key ?? null);
     setOpen(false);
     setName("");
-    qc.invalidateQueries({ queryKey: ["keys", serverId, tid] });
+    qc.invalidateQueries({ queryKey: ["keys", serverId, tenantId] });
   }
 
   async function revoke(id: number) {
-    if (!serverId || !confirm("Revoke this key?")) return;
-    await controlMutate(serverId, "DELETE", `tenants/${tid}/keys/${id}`);
-    qc.invalidateQueries({ queryKey: ["keys", serverId, tid] });
+    if (!serverId || !tenantId || !confirm("Revoke this key?")) return;
+    await controlMutate(serverId, "DELETE", `tenants/${tenantId}/keys/${id}`);
+    qc.invalidateQueries({ queryKey: ["keys", serverId, tenantId] });
   }
 
   return (
@@ -70,22 +67,30 @@ export default function ApiKeysPage() {
         title="API Keys"
         description="Create, rotate, and revoke tenant API keys."
         actions={
-          <Button onClick={() => setOpen(true)} isDisabled={!serverId}>
+          <Button onClick={() => setOpen(true)} isDisabled={!ready}>
             Create key <Plus className="size-4" />
           </Button>
         }
       />
-      <div className="mb-4 flex items-center gap-2">
-        <Label>Tenant ID</Label>
-        <Input className="w-32" value={tenantInput} onChange={(e) => setTenantInput(e.target.value)} />
-      </div>
+      <TenantScopePicker
+        serverId={scope.serverId}
+        tenantId={scope.tenantId}
+        setTenantId={scope.setTenantId}
+        tenants={scope.tenants}
+        isLoading={scope.isLoading}
+      />
       {revealed ? (
-        <div className="mb-4 border border-border bg-muted/30 p-3 font-mono text-xs">
+        <div className="mb-4 border border-border bg-muted/30 p-3 font-mono text-xs text-foreground">
           New secret (copy now): {revealed}
         </div>
       ) : null}
       {isLoading ? <p className="text-sm text-muted">Loading…</p> : null}
-      <div className="border border-border">
+      {isError ? (
+        <p className="mb-4 text-sm text-destructive">
+          {error instanceof Error ? error.message : "Failed to load API keys."}
+        </p>
+      ) : null}
+      <DataPanel>
         <Table>
           <TableHeader>
             <TableRow>
@@ -110,7 +115,7 @@ export default function ApiKeysPage() {
             ))}
           </TableBody>
         </Table>
-      </div>
+      </DataPanel>
 
       <Dialog isOpen={open} onOpenChange={setOpen}>
         <DialogContent>

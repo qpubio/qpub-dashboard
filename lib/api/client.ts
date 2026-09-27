@@ -1,3 +1,5 @@
+import { friendlyApiError } from "@/lib/api/errors";
+
 export class ApiError extends Error {
   status: number;
   constructor(status: number, message: string) {
@@ -8,6 +10,7 @@ export class ApiError extends Error {
 
 export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(path, {
+    credentials: "same-origin",
     ...init,
     headers: {
       "Content-Type": "application/json",
@@ -16,13 +19,7 @@ export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> 
   });
   const text = await res.text();
   if (!res.ok) {
-    let message = text;
-    try {
-      message = JSON.parse(text).error ?? message;
-    } catch {
-      // keep text
-    }
-    throw new ApiError(res.status, message);
+    throw new ApiError(res.status, friendlyApiError(res.status, text, path));
   }
   if (!text) return undefined as T;
   return JSON.parse(text) as T;

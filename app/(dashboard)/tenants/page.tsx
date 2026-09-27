@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { DataPanel } from "@/components/shared/DataPanel";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { useActiveServerId } from "@/components/shared/ServerScopePicker";
 import { controlGet, controlMutate } from "@/lib/hooks/useControl";
@@ -38,7 +39,7 @@ export default function TenantsPage() {
     if (searchParams.get("create") === "1") setCreateOpen(true);
   }, [searchParams]);
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ["tenants", serverId],
     enabled: Boolean(serverId),
     queryFn: () =>
@@ -68,7 +69,12 @@ export default function TenantsPage() {
         <p className="text-sm text-muted">Select a server in the status bar.</p>
       ) : null}
       {isLoading ? <p className="text-sm text-muted">Loading…</p> : null}
-      <div className="border border-border">
+      {isError ? (
+        <p className="mb-4 text-sm text-destructive">
+          {error instanceof Error ? error.message : "Failed to load tenants."}
+        </p>
+      ) : null}
+      <DataPanel>
         <Table>
           <TableHeader>
             <TableRow>
@@ -93,7 +99,7 @@ export default function TenantsPage() {
             ))}
           </TableBody>
         </Table>
-      </div>
+      </DataPanel>
 
       <Dialog isOpen={createOpen} onOpenChange={setCreateOpen}>
         <DialogContent>

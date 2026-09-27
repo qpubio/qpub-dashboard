@@ -1,15 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { DataPanel } from "@/components/shared/DataPanel";
 import { PageHeader } from "@/components/shared/PageHeader";
-import { useActiveServerId } from "@/components/shared/ServerScopePicker";
+import { TenantScopePicker } from "@/components/shared/TenantScopePicker";
+import { useTenantScope } from "@/lib/hooks/useTenantScope";
 import { controlGet } from "@/lib/hooks/useControl";
 import type { JobSummary, QueueSummary, WorkerSummary } from "@/lib/control/types";
 import { useQuery } from "@tanstack/react-query";
 import {
-  Input,
-  Label,
   Table,
   TableBody,
   TableCell,
@@ -24,43 +23,56 @@ import {
 } from "@qpub/qui/lite";
 
 export default function QueuesPage() {
-  const serverId = useActiveServerId();
-  const searchParams = useSearchParams();
-  const [tenantInput, setTenantInput] = useState(searchParams.get("tenant") ?? "1");
+  const scope = useTenantScope({ includePlatform: true, defaultPlatform: true });
+  const { serverId, tenantId, ready } = scope;
   const [selectedQueue, setSelectedQueue] = useState<string | null>(null);
-  const tid = Number(tenantInput) || 1;
 
-  const { data: queues } = useQuery({
-    queryKey: ["queues", serverId, tid],
-    enabled: Boolean(serverId),
+  const { data: queues, isError: queuesError, error: queuesErr } = useQuery({
+    queryKey: ["queues", serverId, tenantId],
+    enabled: ready,
     queryFn: () =>
-      controlGet<{ queues: QueueSummary[] }>(serverId!, `tenants/${tid}/queues?page=1&per_page=50`),
+      controlGet<{ queues: QueueSummary[] }>(
+        serverId!,
+        `tenants/${tenantId}/queues?page=1&per_page=50`,
+      ),
   });
 
   const { data: workers } = useQuery({
-    queryKey: ["workers", serverId, tid],
-    enabled: Boolean(serverId),
+    queryKey: ["workers", serverId, tenantId],
+    enabled: ready,
     queryFn: () =>
-      controlGet<{ workers: WorkerSummary[] }>(serverId!, `tenants/${tid}/workers?page=1&per_page=50`),
+      controlGet<{ workers: WorkerSummary[] }>(
+        serverId!,
+        `tenants/${tenantId}/workers?page=1&per_page=50`,
+      ),
   });
 
   const { data: jobs } = useQuery({
-    queryKey: ["jobs", serverId, tid, selectedQueue],
-    enabled: Boolean(serverId && selectedQueue),
+    queryKey: ["jobs", serverId, tenantId, selectedQueue],
+    enabled: Boolean(serverId && tenantId && selectedQueue),
     queryFn: () =>
       controlGet<{ jobs: JobSummary[] }>(
         serverId!,
-        `tenants/${tid}/queues/${encodeURIComponent(selectedQueue!)}/jobs?limit=30`,
+        `tenants/${tenantId}/queues/${encodeURIComponent(selectedQueue!)}/jobs?limit=30`,
       ),
   });
 
   return (
     <div>
       <PageHeader title="Queues" description="Queue admin, workers, and recent jobs." />
-      <div className="mb-4 flex items-center gap-2">
-        <Label>Tenant ID</Label>
-        <Input className="w-32" value={tenantInput} onChange={(e) => setTenantInput(e.target.value)} />
-      </div>
+      <TenantScopePicker
+        serverId={scope.serverId}
+        tenantId={scope.tenantId}
+        setTenantId={scope.setTenantId}
+        tenants={scope.tenants}
+        isLoading={scope.isLoading}
+        includePlatform
+      />
+      {queuesError ? (
+        <p className="mb-4 text-sm text-destructive">
+          {queuesErr instanceof Error ? queuesErr.message : "Failed to load queues."}
+        </p>
+      ) : null}
       <Tabs defaultValue="queues">
         <TabsList>
           <TabsTrigger value="queues">Queues</TabsTrigger>
@@ -70,7 +82,7 @@ export default function QueuesPage() {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="queues">
-          <div className="border border-border">
+          <DataPanel>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -99,10 +111,10 @@ export default function QueuesPage() {
                 ))}
               </TableBody>
             </Table>
-          </div>
+          </DataPanel>
         </TabsContent>
         <TabsContent value="workers">
-          <div className="border border-border">
+          <DataPanel>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -123,10 +135,10 @@ export default function QueuesPage() {
                 ))}
               </TableBody>
             </Table>
-          </div>
+          </DataPanel>
         </TabsContent>
         <TabsContent value="jobs">
-          <div className="border border-border">
+          <DataPanel>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -149,7 +161,7 @@ export default function QueuesPage() {
                 ))}
               </TableBody>
             </Table>
-          </div>
+          </DataPanel>
         </TabsContent>
       </Tabs>
     </div>

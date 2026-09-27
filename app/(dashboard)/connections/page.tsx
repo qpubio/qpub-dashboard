@@ -1,54 +1,86 @@
 "use client";
 
-import { useState } from "react";
+import { DataPanel } from "@/components/shared/DataPanel";
 import { PageHeader } from "@/components/shared/PageHeader";
-import { useActiveServerId } from "@/components/shared/ServerScopePicker";
+import { TenantScopePicker } from "@/components/shared/TenantScopePicker";
+import { useTenantScope } from "@/lib/hooks/useTenantScope";
 import { controlGet } from "@/lib/hooks/useControl";
 import type { ChannelSummary, ConnectionSummary } from "@/lib/control/types";
 import { useQuery } from "@tanstack/react-query";
-import { Input, Label, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Tabs, TabsContent, TabsList, TabsTrigger } from "@qpub/qui/lite";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@qpub/qui/lite";
 
 export default function ConnectionsPage() {
-  const serverId = useActiveServerId();
-  const [tenantInput, setTenantInput] = useState("1");
-  const tid = Number(tenantInput) || 1;
+  const scope = useTenantScope();
+  const { serverId, tenantId, ready } = scope;
 
-  const { data: connections } = useQuery({
-    queryKey: ["connections", serverId, tid],
-    enabled: Boolean(serverId),
+  const {
+    data: connections,
+    isError: connError,
+    error: connErr,
+  } = useQuery({
+    queryKey: ["connections", serverId, tenantId],
+    enabled: ready,
     refetchInterval: 3000,
     queryFn: () =>
       controlGet<{ connections: ConnectionSummary[] }>(
         serverId!,
-        `tenants/${tid}/connections?page=1&per_page=100`,
+        `tenants/${tenantId}/connections?page=1&per_page=100`,
       ),
   });
 
-  const { data: channels } = useQuery({
-    queryKey: ["channels", serverId, tid],
-    enabled: Boolean(serverId),
+  const {
+    data: channels,
+    isError: chError,
+    error: chErr,
+  } = useQuery({
+    queryKey: ["channels", serverId, tenantId],
+    enabled: ready,
     refetchInterval: 5000,
     queryFn: () =>
       controlGet<{ channels: ChannelSummary[] }>(
         serverId!,
-        `tenants/${tid}/channels?page=1&per_page=100`,
+        `tenants/${tenantId}/channels?page=1&per_page=100`,
       ),
   });
 
   return (
     <div>
       <PageHeader title="Connections" description="Live WebSocket connections and local channels." />
-      <div className="mb-4 flex items-center gap-2">
-        <Label>Tenant ID</Label>
-        <Input className="w-32" value={tenantInput} onChange={(e) => setTenantInput(e.target.value)} />
-      </div>
+      <TenantScopePicker
+        serverId={scope.serverId}
+        tenantId={scope.tenantId}
+        setTenantId={scope.setTenantId}
+        tenants={scope.tenants}
+        isLoading={scope.isLoading}
+      />
+      {connError ? (
+        <p className="mb-4 text-sm text-destructive">
+          {connErr instanceof Error ? connErr.message : "Failed to load connections."}
+        </p>
+      ) : null}
+      {chError ? (
+        <p className="mb-4 text-sm text-destructive">
+          {chErr instanceof Error ? chErr.message : "Failed to load channels."}
+        </p>
+      ) : null}
       <Tabs defaultValue="connections">
         <TabsList>
           <TabsTrigger value="connections">Connections</TabsTrigger>
           <TabsTrigger value="channels">Channels</TabsTrigger>
         </TabsList>
         <TabsContent value="connections">
-          <div className="border border-border">
+          <DataPanel>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -73,10 +105,10 @@ export default function ConnectionsPage() {
                 ))}
               </TableBody>
             </Table>
-          </div>
+          </DataPanel>
         </TabsContent>
         <TabsContent value="channels">
-          <div className="border border-border">
+          <DataPanel>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -97,7 +129,7 @@ export default function ConnectionsPage() {
                 ))}
               </TableBody>
             </Table>
-          </div>
+          </DataPanel>
         </TabsContent>
       </Tabs>
     </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { DataPanel } from "@/components/shared/DataPanel";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api/client";
@@ -25,7 +26,7 @@ export default function EventsPage() {
     <div>
       <PageHeader title="Events" description="Operational timeline from dashboard audit log." />
       {isLoading ? <p className="text-sm text-muted">Loading…</p> : null}
-      <div className="border border-border">
+      <DataPanel>
         <Table>
           <TableHeader>
             <TableRow>
@@ -48,7 +49,7 @@ export default function EventsPage() {
             ))}
           </TableBody>
         </Table>
-      </div>
+      </DataPanel>
     </div>
   );
 }

@@ -2,6 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AppearanceProvider } from "@qpub/qui";
+import { ThemeProvider } from "next-themes";
 import { useState } from "react";
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -16,9 +17,11 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AppearanceProvider appearance="terminal" density="compact">
-        {children}
-      </AppearanceProvider>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <AppearanceProvider appearance="terminal" density="compact">
+          {children}
+        </AppearanceProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

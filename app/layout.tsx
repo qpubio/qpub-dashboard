@@ -13,12 +13,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`dark ${GeistSans.variable} ${GeistMono.variable}`}
+      className={`${GeistSans.variable} ${GeistMono.variable}`}
       data-appearance="terminal"
       data-density="compact"
       suppressHydrationWarning
     >
-      <body className="min-h-screen bg-background font-sans antialiased">
+      <body className="min-h-screen bg-background font-sans text-foreground antialiased">
         <Providers>{children}</Providers>
       </body>
     </html>
