@@ -2,6 +2,10 @@
 
 Self-hosted control plane for [qpub-server](https://github.com/qpubio/qpub-server). Operate tenants, API keys, queues, and realtime stats through a terminal-inspired web UI built with [@qpub/qui](https://github.com/qpubio/qui).
 
+<p align="center">
+  <img alt="QPub Dashboard overview: server health and traffic" src="./docs/images/overview.png" width="900">
+</p>
+
 ## Quick start
 
 ```bash

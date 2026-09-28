@@ -3,9 +3,12 @@
 import { CommandPalette } from "@/components/shared/layout/CommandPalette";
 import { DashboardSidebar } from "@/components/shared/layout/DashboardSidebar";
 import { DashboardStatusBar } from "@/components/shared/layout/DashboardStatusBar";
+import { useMetricHistoryRecorder } from "@/lib/hooks/useMetricHistory";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@qpub/qui/lite";
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
+  useMetricHistoryRecorder();
+
   return (
     <SidebarProvider>
       <DashboardSidebar />

@@ -1,8 +1,10 @@
 "use client";
 
+import { ChartGrid, LedChart } from "@/components/charts/LedChart";
 import { DataPanel } from "@/components/shared/DataPanel";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { StatStrip } from "@/components/shared/StatStrip";
+import { useMetricHistory } from "@/lib/hooks/useMetricHistory";
 import { useOverview } from "@/lib/hooks/useOverview";
 import { formatNum } from "@/lib/utils";
 import {
@@ -17,6 +19,7 @@ import {
 
 export default function OverviewPage() {
   const { data, isLoading, isError } = useOverview();
+  const history = useMetricHistory();
   const stats = data?.stats ?? {};
 
   return (
@@ -45,6 +48,43 @@ export default function OverviewPage() {
               { label: "Dropped", value: formatNum(stats["msg:drop"]) },
             ]}
           />
+          <ChartGrid className="mb-6 grid-cols-1 lg:grid-cols-2">
+            <LedChart
+              title="Message rate"
+              unit="/s"
+              series={[
+                {
+                  key: "msg:in",
+                  name: "msg:in",
+                  token: "--chart-2",
+                  data: history.series["msg:in"],
+                },
+                {
+                  key: "msg:out",
+                  name: "msg:out",
+                  token: "--chart-4",
+                  data: history.series["msg:out"],
+                },
+              ]}
+            />
+            <LedChart
+              title="Connections"
+              series={[
+                {
+                  key: "conn",
+                  name: "conn",
+                  token: "--chart-1",
+                  data: history.series.conn,
+                },
+                {
+                  key: "sub",
+                  name: "sub",
+                  token: "--chart-4",
+                  data: history.series.sub,
+                },
+              ]}
+            />
+          </ChartGrid>
           <DataPanel>
             <Table>
               <TableHeader>

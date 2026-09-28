@@ -1,13 +1,16 @@
 "use client";
 
 import { useRef } from "react";
+import { ChartGrid, LedChart } from "@/components/charts/LedChart";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { StatStrip } from "@/components/shared/StatStrip";
+import { useMetricHistory } from "@/lib/hooks/useMetricHistory";
 import { useOverview } from "@/lib/hooks/useOverview";
 import { formatNum } from "@/lib/utils";
 
 export default function MonitoringPage() {
   const { data } = useOverview();
+  const history = useMetricHistory();
   const prev = useRef<Record<string, number>>({});
 
   const stats = data?.stats ?? {};
@@ -26,6 +29,7 @@ export default function MonitoringPage() {
         description="Realtime counters aggregated across registered servers (2s refresh)."
       />
       <StatStrip
+        className="mb-6"
         stats={[
           {
             label: "conn",
@@ -59,6 +63,83 @@ export default function MonitoringPage() {
           },
         ]}
       />
+      <ChartGrid className="grid-cols-1 lg:grid-cols-2">
+        <LedChart
+          className="lg:col-span-2"
+          title="Message rate"
+          unit="/s"
+          height={200}
+          series={[
+            {
+              key: "msg:in",
+              name: "msg:in",
+              token: "--chart-2",
+              data: history.series["msg:in"],
+            },
+            {
+              key: "msg:out",
+              name: "msg:out",
+              token: "--chart-4",
+              data: history.series["msg:out"],
+            },
+          ]}
+        />
+        <LedChart
+          title="Drops"
+          unit="/s"
+          series={[
+            {
+              key: "msg:drop",
+              name: "msg:drop",
+              token: "--chart-6",
+              data: history.series["msg:drop"],
+            },
+          ]}
+        />
+        <LedChart
+          title="Bandwidth"
+          unit="bytes/s"
+          series={[
+            {
+              key: "bw:in",
+              name: "bw:in",
+              token: "--chart-2",
+              data: history.series["bw:in"],
+            },
+            {
+              key: "bw:out",
+              name: "bw:out",
+              token: "--chart-4",
+              data: history.series["bw:out"],
+            },
+          ]}
+        />
+        <LedChart
+          className="lg:col-span-2"
+          title="Presence"
+          height={200}
+          series={[
+            {
+              key: "conn",
+              name: "conn",
+              token: "--chart-1",
+              data: history.series.conn,
+            },
+            {
+              key: "sub",
+              name: "sub",
+              token: "--chart-4",
+              data: history.series.sub,
+            },
+            {
+              key: "chan",
+              name: "chan",
+              token: "--chart-5",
+              data: history.series.chan,
+            },
+          ]}
+        />
+      </ChartGrid>
     </div>
   );
 }
