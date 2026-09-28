@@ -28,7 +28,10 @@ export function useTenantScope(options: TenantScopeOptions = {}) {
     queryKey: ["tenants", serverId],
     enabled: Boolean(serverId),
     queryFn: () =>
-      controlGet<{ tenants: Tenant[]; pagination: Pagination }>(serverId!, "tenants"),
+      controlGet<{ tenants: Tenant[]; pagination: Pagination }>(
+        serverId!,
+        "tenants",
+      ),
   });
 
   const tenants = data?.tenants ?? [];
@@ -51,7 +54,14 @@ export function useTenantScope(options: TenantScopeOptions = {}) {
     if (tenants[0]) {
       setTenantScope(tenants[0].id);
     }
-  }, [stored, searchParams, tenants, defaultPlatform, includePlatform, setTenantScope]);
+  }, [
+    stored,
+    searchParams,
+    tenants,
+    defaultPlatform,
+    includePlatform,
+    setTenantScope,
+  ]);
 
   const tenantId = useMemo(() => {
     if (stored) return stored;

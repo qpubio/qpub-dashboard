@@ -32,8 +32,14 @@ export async function POST(_req: Request, ctx: Ctx) {
       } catch {
         // keep default
       }
-      return NextResponse.json({ ok: false, error: message }, { status: e.status });
+      return NextResponse.json(
+        { ok: false, error: message },
+        { status: e.status },
+      );
     }
-    return NextResponse.json({ ok: false, error: "Connection test failed" }, { status: 502 });
+    return NextResponse.json(
+      { ok: false, error: "Connection test failed" },
+      { status: 502 },
+    );
   }
 }

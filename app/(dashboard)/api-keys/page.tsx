@@ -38,17 +38,25 @@ export default function ApiKeysPage() {
     queryKey: ["keys", serverId, tenantId],
     enabled: ready,
     queryFn: async () => {
-      const res = await controlGet<{ keys: APIKey[] }>(serverId!, `tenants/${tenantId}/keys`);
+      const res = await controlGet<{ keys: APIKey[] }>(
+        serverId!,
+        `tenants/${tenantId}/keys`,
+      );
       return res.keys;
     },
   });
 
   async function createKey() {
     if (!serverId || !tenantId) return;
-    const key = await controlMutate<APIKey>(serverId, "POST", `tenants/${tenantId}/keys`, {
-      name,
-      permission: {},
-    });
+    const key = await controlMutate<APIKey>(
+      serverId,
+      "POST",
+      `tenants/${tenantId}/keys`,
+      {
+        name,
+        permission: {},
+      },
+    );
     setRevealed(key.secret_key ?? null);
     setOpen(false);
     setName("");

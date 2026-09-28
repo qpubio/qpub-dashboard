@@ -19,7 +19,9 @@ export function ThemeToggle() {
     <div className="flex items-center justify-between gap-2 px-2 py-1 text-sm">
       <span className="text-muted">Theme</span>
       <div className="flex items-center gap-1">
-        <span className="text-[0.625rem] text-muted capitalize">{theme ?? "system"}</span>
+        <span className="text-[0.625rem] text-muted capitalize">
+          {theme ?? "system"}
+        </span>
         <ToggleGroup
           type="single"
           size="sm"

@@ -52,7 +52,9 @@ function migrate(database: Database.Database) {
 }
 
 function seedServers(database: Database.Database) {
-  const count = database.prepare("SELECT COUNT(*) as c FROM servers").get() as { c: number };
+  const count = database.prepare("SELECT COUNT(*) as c FROM servers").get() as {
+    c: number;
+  };
   if (count.c > 0) return;
 
   const insert = database.prepare(`
@@ -73,7 +75,10 @@ function seedServers(database: Database.Database) {
           id: s.id ?? crypto.randomUUID(),
           name: s.name,
           control_url: s.control_url.replace(/\/$/, ""),
-          control_token_enc: encryptSecret(s.control_token, env.dashboardSecret),
+          control_token_enc: encryptSecret(
+            s.control_token,
+            env.dashboardSecret,
+          ),
         });
       }
       return;
@@ -118,7 +123,9 @@ function syncEnvCredentials(database: Database.Database) {
   const updateToken = database.prepare(
     "UPDATE servers SET control_token_enc = ? WHERE id = ?",
   );
-  const updateUrl = database.prepare("UPDATE servers SET control_url = ? WHERE id = ?");
+  const updateUrl = database.prepare(
+    "UPDATE servers SET control_url = ? WHERE id = ?",
+  );
 
   for (const row of targets) {
     if (enc) updateToken.run(enc, row.id);
@@ -138,11 +145,14 @@ export function getDb(): Database.Database {
 }
 
 export function listServers(): ServerRow[] {
-  return getDb().prepare("SELECT * FROM servers ORDER BY name ASC").all() as ServerRow[];
+  return getDb()
+    .prepare("SELECT * FROM servers ORDER BY name ASC")
+    .all() as ServerRow[];
 }
 
 export function getServer(id: string): ServerRow | undefined {
-  return getDb().prepare("SELECT * FROM servers WHERE id = ?").get(id) as ServerRow | undefined;
+  return getDb().prepare("SELECT * FROM servers WHERE id = ?").get(id) as
+    ServerRow | undefined;
 }
 
 export function upsertServer(input: {
@@ -158,7 +168,10 @@ export function upsertServer(input: {
   if (!token && !existing) {
     throw new Error("control_token required for new server");
   }
-  const enc = encryptSecret(token || decryptSecret(existing!.control_token_enc, env.dashboardSecret), env.dashboardSecret);
+  const enc = encryptSecret(
+    token || decryptSecret(existing!.control_token_enc, env.dashboardSecret),
+    env.dashboardSecret,
+  );
   database
     .prepare(
       `INSERT INTO servers (id, name, control_url, control_token_enc)

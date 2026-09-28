@@ -93,11 +93,19 @@ export function controlProxy(
 }
 
 export async function getServerInfo(serverId: string) {
-  return controlFetch<ServerInfo>(serverCreds(serverId), "GET", "/control/v1/server");
+  return controlFetch<ServerInfo>(
+    serverCreds(serverId),
+    "GET",
+    "/control/v1/server",
+  );
 }
 
 export async function getMetrics(serverId: string) {
-  return controlFetch<MetricsRollup>(serverCreds(serverId), "GET", "/control/v1/metrics");
+  return controlFetch<MetricsRollup>(
+    serverCreds(serverId),
+    "GET",
+    "/control/v1/metrics",
+  );
 }
 
 export async function listTenants(serverId: string, page = 1, perPage = 20) {
@@ -109,11 +117,20 @@ export async function listTenants(serverId: string, page = 1, perPage = 20) {
 }
 
 export async function getTenant(serverId: string, tenantId: string) {
-  return controlFetch<Tenant>(serverCreds(serverId), "GET", `/control/v1/tenants/${tenantId}`);
+  return controlFetch<Tenant>(
+    serverCreds(serverId),
+    "GET",
+    `/control/v1/tenants/${tenantId}`,
+  );
 }
 
 export async function createTenant(serverId: string, id: string) {
-  return controlFetch<Tenant>(serverCreds(serverId), "POST", "/control/v1/tenants", { id });
+  return controlFetch<Tenant>(
+    serverCreds(serverId),
+    "POST",
+    "/control/v1/tenants",
+    { id },
+  );
 }
 
 export async function deleteTenant(serverId: string, tenantId: string) {
@@ -146,10 +163,15 @@ export async function setLimits(
   inbound: number,
   outbound: number,
 ) {
-  return controlFetch<Limits>(serverCreds(serverId), "PUT", `/control/v1/tenants/${tenantId}/limits`, {
-    inbound_per_second: inbound,
-    outbound_per_second: outbound,
-  });
+  return controlFetch<Limits>(
+    serverCreds(serverId),
+    "PUT",
+    `/control/v1/tenants/${tenantId}/limits`,
+    {
+      inbound_per_second: inbound,
+      outbound_per_second: outbound,
+    },
+  );
 }
 
 export async function listKeys(serverId: string, tenantId: string) {
@@ -188,7 +210,11 @@ export async function updateKey(
   );
 }
 
-export async function deleteKey(serverId: string, tenantId: string, keyId: string) {
+export async function deleteKey(
+  serverId: string,
+  tenantId: string,
+  keyId: string,
+) {
   return controlFetch<void>(
     serverCreds(serverId),
     "DELETE",
@@ -204,7 +230,11 @@ export async function listQueues(serverId: string, tenantId: string, page = 1) {
   );
 }
 
-export async function listWorkers(serverId: string, tenantId: string, page = 1) {
+export async function listWorkers(
+  serverId: string,
+  tenantId: string,
+  page = 1,
+) {
   return controlFetch<{ workers: WorkerSummary[]; pagination: Pagination }>(
     serverCreds(serverId),
     "GET",
@@ -218,7 +248,9 @@ export async function listJobs(
   queueName: string,
   status?: string,
 ) {
-  const q = status ? `?status=${encodeURIComponent(status)}&limit=50` : "?limit=50";
+  const q = status
+    ? `?status=${encodeURIComponent(status)}&limit=50`
+    : "?limit=50";
   return controlFetch<{ jobs: JobSummary[] }>(
     serverCreds(serverId),
     "GET",
@@ -226,15 +258,26 @@ export async function listJobs(
   );
 }
 
-export async function listConnections(serverId: string, tenantId: string, page = 1) {
-  return controlFetch<{ connections: ConnectionSummary[]; pagination: Pagination }>(
+export async function listConnections(
+  serverId: string,
+  tenantId: string,
+  page = 1,
+) {
+  return controlFetch<{
+    connections: ConnectionSummary[];
+    pagination: Pagination;
+  }>(
     serverCreds(serverId),
     "GET",
     `/control/v1/tenants/${tenantId}/connections?page=${page}&per_page=50`,
   );
 }
 
-export async function listChannels(serverId: string, tenantId: string, page = 1) {
+export async function listChannels(
+  serverId: string,
+  tenantId: string,
+  page = 1,
+) {
   return controlFetch<{ channels: ChannelSummary[]; pagination: Pagination }>(
     serverCreds(serverId),
     "GET",

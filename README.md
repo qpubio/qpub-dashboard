@@ -29,13 +29,13 @@ docker compose up --build
 
 ## Environment
 
-| Variable | Purpose |
-| -------- | ------- |
-| `DASHBOARD_SECRET` | Session signing + token encryption (required in production) |
-| `DASHBOARD_ADMIN_USER` / `DASHBOARD_ADMIN_PASSWORD` | Built-in admin login |
-| `DASHBOARD_ADMIN_PASSWORD_HASH` | Bcrypt hash instead of plaintext password |
-| `DASHBOARD_DATA_DIR` | SQLite registry path (default `./data`) |
-| `QPUB_SERVERS` | JSON array to seed multiple servers on first boot |
+| Variable                                            | Purpose                                                     |
+| --------------------------------------------------- | ----------------------------------------------------------- |
+| `DASHBOARD_SECRET`                                  | Session signing + token encryption (required in production) |
+| `DASHBOARD_ADMIN_USER` / `DASHBOARD_ADMIN_PASSWORD` | Built-in admin login                                        |
+| `DASHBOARD_ADMIN_PASSWORD_HASH`                     | Bcrypt hash instead of plaintext password                   |
+| `DASHBOARD_DATA_DIR`                                | SQLite registry path (default `./data`)                     |
+| `QPUB_SERVERS`                                      | JSON array to seed multiple servers on first boot           |
 
 ## License
 

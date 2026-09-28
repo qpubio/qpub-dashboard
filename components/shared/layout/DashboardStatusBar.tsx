@@ -21,7 +21,12 @@ export function DashboardStatusBar() {
 
   const healthy = overview?.healthyCount ?? 0;
   const total = overview?.servers.length ?? 0;
-  const tone = healthy === total && total > 0 ? "success" : total === 0 ? "warning" : "warning";
+  const tone =
+    healthy === total && total > 0
+      ? "success"
+      : total === 0
+        ? "warning"
+        : "warning";
 
   return (
     <StatusBar className="border-t border-border">

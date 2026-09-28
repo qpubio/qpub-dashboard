@@ -44,7 +44,8 @@ export function DashboardSidebar() {
                 const active =
                   item.href === "/"
                     ? pathname === "/"
-                    : pathname === item.href || pathname.startsWith(`${item.href}/`);
+                    : pathname === item.href ||
+                      pathname.startsWith(`${item.href}/`);
                 return (
                   <SidebarMenuItem key={item.href}>
                     <SidebarMenuButton asChild isActive={active}>
@@ -62,7 +63,11 @@ export function DashboardSidebar() {
       </SidebarContent>
       <SidebarFooter className="border-t border-border p-2 space-y-1">
         <ThemeToggle />
-        <Button variant="ghost" className="w-full justify-start" onClick={logout}>
+        <Button
+          variant="ghost"
+          className="w-full justify-start"
+          onClick={logout}
+        >
           <LogOut className="size-4" />
           Log out
         </Button>

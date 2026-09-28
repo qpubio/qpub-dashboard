@@ -27,7 +27,8 @@ export function useRegisterServer() {
       control_url: string;
       control_token?: string;
       id?: string;
-    }) => apiFetch("/api/servers", { method: "POST", body: JSON.stringify(body) }),
+    }) =>
+      apiFetch("/api/servers", { method: "POST", body: JSON.stringify(body) }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["servers"] }),
   });
 }
@@ -35,7 +36,10 @@ export function useRegisterServer() {
 export function useDeleteServer() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => apiFetch(`/api/servers?id=${encodeURIComponent(id)}`, { method: "DELETE" }),
+    mutationFn: (id: string) =>
+      apiFetch(`/api/servers?id=${encodeURIComponent(id)}`, {
+        method: "DELETE",
+      }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["servers"] }),
   });
 }
@@ -43,9 +47,11 @@ export function useDeleteServer() {
 export function useTestServerConnection() {
   return useMutation({
     mutationFn: (id: string) =>
-      apiFetch<{ ok: boolean; error?: string; version?: string; health?: string }>(
-        `/api/servers/${encodeURIComponent(id)}/test`,
-        { method: "POST" },
-      ),
+      apiFetch<{
+        ok: boolean;
+        error?: string;
+        version?: string;
+        health?: string;
+      }>(`/api/servers/${encodeURIComponent(id)}/test`, { method: "POST" }),
   });
 }

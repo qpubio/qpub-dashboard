@@ -6,7 +6,11 @@ import { PageHeader } from "@/components/shared/PageHeader";
 import { TenantScopePicker } from "@/components/shared/TenantScopePicker";
 import { useTenantScope } from "@/lib/hooks/useTenantScope";
 import { controlGet } from "@/lib/hooks/useControl";
-import type { JobSummary, QueueSummary, WorkerSummary } from "@/lib/control/types";
+import type {
+  JobSummary,
+  QueueSummary,
+  WorkerSummary,
+} from "@/lib/control/types";
 import { useQuery } from "@tanstack/react-query";
 import {
   Table,
@@ -23,11 +27,18 @@ import {
 } from "@qpub/qui/lite";
 
 export default function QueuesPage() {
-  const scope = useTenantScope({ includePlatform: true, defaultPlatform: true });
+  const scope = useTenantScope({
+    includePlatform: true,
+    defaultPlatform: true,
+  });
   const { serverId, tenantId, ready } = scope;
   const [selectedQueue, setSelectedQueue] = useState<string | null>(null);
 
-  const { data: queues, isError: queuesError, error: queuesErr } = useQuery({
+  const {
+    data: queues,
+    isError: queuesError,
+    error: queuesErr,
+  } = useQuery({
     queryKey: ["queues", serverId, tenantId],
     enabled: ready,
     queryFn: () =>
@@ -59,7 +70,10 @@ export default function QueuesPage() {
 
   return (
     <div>
-      <PageHeader title="Queues" description="Queue admin, workers, and recent jobs." />
+      <PageHeader
+        title="Queues"
+        description="Queue admin, workers, and recent jobs."
+      />
       <TenantScopePicker
         serverId={scope.serverId}
         tenantId={scope.tenantId}
@@ -70,7 +84,9 @@ export default function QueuesPage() {
       />
       {queuesError ? (
         <p className="mb-4 text-sm text-destructive">
-          {queuesErr instanceof Error ? queuesErr.message : "Failed to load queues."}
+          {queuesErr instanceof Error
+            ? queuesErr.message
+            : "Failed to load queues."}
         </p>
       ) : null}
       <Tabs defaultValue="queues">
@@ -128,7 +144,9 @@ export default function QueuesPage() {
                 {(workers?.workers ?? []).map((w) => (
                   <TableRow key={w.id}>
                     <TableCell>{w.name}</TableCell>
-                    <TableCell className="font-mono text-xs">{w.queues.join(", ")}</TableCell>
+                    <TableCell className="font-mono text-xs">
+                      {w.queues.join(", ")}
+                    </TableCell>
                     <TableCell className="text-xs">{w.last_seen_at}</TableCell>
                     <TableCell>{w.stale ? "yes" : "no"}</TableCell>
                   </TableRow>
@@ -156,7 +174,9 @@ export default function QueuesPage() {
                     <TableCell>
                       {j.attempt}/{j.max_attempts}
                     </TableCell>
-                    <TableCell className="font-mono text-xs">{j.worker_id ?? "—"}</TableCell>
+                    <TableCell className="font-mono text-xs">
+                      {j.worker_id ?? "—"}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

@@ -4,7 +4,15 @@ import { DataPanel } from "@/components/shared/DataPanel";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api/client";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Badge } from "@qpub/qui/lite";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  Badge,
+} from "@qpub/qui/lite";
 
 type AuditEvent = {
   id: number;
@@ -24,7 +32,10 @@ export default function EventsPage() {
 
   return (
     <div>
-      <PageHeader title="Events" description="Operational timeline from dashboard audit log." />
+      <PageHeader
+        title="Events"
+        description="Operational timeline from dashboard audit log."
+      />
       {isLoading ? <p className="text-sm text-muted">Loading…</p> : null}
       <DataPanel>
         <Table>
@@ -39,11 +50,15 @@ export default function EventsPage() {
           <TableBody>
             {(data?.events ?? []).map((e) => (
               <TableRow key={e.id}>
-                <TableCell className="text-xs text-muted">{e.created_at}</TableCell>
+                <TableCell className="text-xs text-muted">
+                  {e.created_at}
+                </TableCell>
                 <TableCell>
                   <Badge variant="flat">{e.severity}</Badge>
                 </TableCell>
-                <TableCell className="font-mono text-xs">{e.category}</TableCell>
+                <TableCell className="font-mono text-xs">
+                  {e.category}
+                </TableCell>
                 <TableCell className="font-mono text-xs">{e.message}</TableCell>
               </TableRow>
             ))}

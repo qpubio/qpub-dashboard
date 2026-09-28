@@ -13,7 +13,9 @@ export async function GET() {
   if (!(await requireAuth())) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const servers = listServers().map(({ control_token_enc: _t, ...rest }) => rest);
+  const servers = listServers().map(
+    ({ control_token_enc: _t, ...rest }) => rest,
+  );
   return NextResponse.json({ servers });
 }
 
@@ -28,16 +30,25 @@ export async function POST(req: NextRequest) {
     control_token?: string;
   };
   if (!body.name || !body.control_url) {
-    return NextResponse.json({ error: "name and control_url required" }, { status: 400 });
+    return NextResponse.json(
+      { error: "name and control_url required" },
+      { status: 400 },
+    );
   }
   if (!body.id && !body.control_token?.trim()) {
-    return NextResponse.json({ error: "control_token required for new server" }, { status: 400 });
+    return NextResponse.json(
+      { error: "control_token required for new server" },
+      { status: 400 },
+    );
   }
   let row: ReturnType<typeof upsertServer>;
   try {
     row = upsertServer(body);
   } catch {
-    return NextResponse.json({ error: "control_token required for new server" }, { status: 400 });
+    return NextResponse.json(
+      { error: "control_token required for new server" },
+      { status: 400 },
+    );
   }
   await healthCheck(row.id);
   insertAudit({

@@ -29,7 +29,12 @@ import {
 } from "@qpub/qui/lite";
 import { Pencil, Plus, Trash2, Zap } from "lucide-react";
 
-type FormState = { id?: string; name: string; control_url: string; control_token: string };
+type FormState = {
+  id?: string;
+  name: string;
+  control_url: string;
+  control_token: string;
+};
 
 const emptyForm: FormState = { name: "", control_url: "", control_token: "" };
 
@@ -40,9 +45,9 @@ export default function ServersPage() {
   const testConn = useTestServerConnection();
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState<FormState>(emptyForm);
-  const [testResult, setTestResult] = useState<Record<string, { ok: boolean; message: string }>>(
-    {},
-  );
+  const [testResult, setTestResult] = useState<
+    Record<string, { ok: boolean; message: string }>
+  >({});
 
   function openAdd() {
     setForm(emptyForm);
@@ -50,7 +55,12 @@ export default function ServersPage() {
   }
 
   function openEdit(s: ServerRecord) {
-    setForm({ id: s.id, name: s.name, control_url: s.control_url, control_token: "" });
+    setForm({
+      id: s.id,
+      name: s.name,
+      control_url: s.control_url,
+      control_token: "",
+    });
     setOpen(true);
   }
 
@@ -59,7 +69,9 @@ export default function ServersPage() {
       id: form.id,
       name: form.name,
       control_url: form.control_url,
-      ...(form.control_token.trim() ? { control_token: form.control_token } : {}),
+      ...(form.control_token.trim()
+        ? { control_token: form.control_token }
+        : {}),
     };
     await register.mutateAsync(payload);
     setOpen(false);
@@ -67,7 +79,10 @@ export default function ServersPage() {
   }
 
   async function testServer(id: string) {
-    setTestResult((prev) => ({ ...prev, [id]: { ok: true, message: "Testing…" } }));
+    setTestResult((prev) => ({
+      ...prev,
+      [id]: { ok: true, message: "Testing…" },
+    }));
     try {
       const res = await testConn.mutateAsync(id);
       if (res.ok) {
@@ -121,11 +136,15 @@ export default function ServersPage() {
             {(data?.servers ?? []).map((s) => (
               <TableRow key={s.id}>
                 <TableCell className="font-mono">{s.name}</TableCell>
-                <TableCell className="font-mono text-xs">{s.control_url}</TableCell>
+                <TableCell className="font-mono text-xs">
+                  {s.control_url}
+                </TableCell>
                 <TableCell>
                   <Badge variant="flat">{s.last_health ?? "unknown"}</Badge>
                 </TableCell>
-                <TableCell className="text-xs text-muted">{s.last_seen_at ?? "—"}</TableCell>
+                <TableCell className="text-xs text-muted">
+                  {s.last_seen_at ?? "—"}
+                </TableCell>
                 <TableCell className="space-y-1 text-right">
                   <div className="flex items-center justify-end gap-1">
                     <Button
@@ -136,7 +155,12 @@ export default function ServersPage() {
                     >
                       Test <Zap className="size-3.5" />
                     </Button>
-                    <Button variant="ghost" isIconOnly onClick={() => openEdit(s)} aria-label="Edit server">
+                    <Button
+                      variant="ghost"
+                      isIconOnly
+                      onClick={() => openEdit(s)}
+                      aria-label="Edit server"
+                    >
                       <Pencil className="size-4" />
                     </Button>
                     <Button
@@ -165,28 +189,39 @@ export default function ServersPage() {
       <Dialog isOpen={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{editing ? "Edit qpub-server" : "Add qpub-server"}</DialogTitle>
+            <DialogTitle>
+              {editing ? "Edit qpub-server" : "Add qpub-server"}
+            </DialogTitle>
           </DialogHeader>
           <div className="space-y-3">
             <div>
               <Label>Name</Label>
-              <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+              <Input
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+              />
             </div>
             <div>
               <Label>Control URL</Label>
               <Input
                 placeholder="http://localhost:8091"
                 value={form.control_url}
-                onChange={(e) => setForm({ ...form, control_url: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, control_url: e.target.value })
+                }
               />
             </div>
             <div>
               <Label>Control API token</Label>
               <Input
                 type="password"
-                placeholder={editing ? "Leave blank to keep current token" : undefined}
+                placeholder={
+                  editing ? "Leave blank to keep current token" : undefined
+                }
                 value={form.control_token}
-                onChange={(e) => setForm({ ...form, control_token: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, control_token: e.target.value })
+                }
               />
             </div>
           </div>

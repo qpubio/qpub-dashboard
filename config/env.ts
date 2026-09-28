@@ -1,6 +1,5 @@
 /** iron-session requires password length ≥ 32 */
-export const defaultDashboardSecret =
-  "dev-dashboard-secret-change-me-32chars";
+export const defaultDashboardSecret = "dev-dashboard-secret-change-me-32chars";
 
 export const env = {
   appUrl: process.env.APP_URL ?? "http://localhost:3004",

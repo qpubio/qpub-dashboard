@@ -49,9 +49,15 @@ export function CommandPalette() {
         </CommandGroup>
         <CommandSeparator />
         <CommandGroup heading="Actions">
-          <CommandItem onSelect={() => go("/tenants?create=1")}>Create tenant…</CommandItem>
-          <CommandItem onSelect={() => go("/console")}>Open debug console</CommandItem>
-          <CommandItem onSelect={() => go("/servers")}>Manage servers</CommandItem>
+          <CommandItem onSelect={() => go("/tenants?create=1")}>
+            Create tenant…
+          </CommandItem>
+          <CommandItem onSelect={() => go("/console")}>
+            Open debug console
+          </CommandItem>
+          <CommandItem onSelect={() => go("/servers")}>
+            Manage servers
+          </CommandItem>
         </CommandGroup>
       </CommandList>
     </CommandDialog>

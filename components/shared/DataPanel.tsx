@@ -8,6 +8,8 @@ export function DataPanel({
   className?: string;
 }) {
   return (
-    <div className={cn("border border-border text-foreground", className)}>{children}</div>
+    <div className={cn("border border-border text-foreground", className)}>
+      {children}
+    </div>
   );
 }

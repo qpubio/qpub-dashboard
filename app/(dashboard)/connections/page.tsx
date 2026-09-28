@@ -56,7 +56,10 @@ export default function ConnectionsPage() {
 
   return (
     <div>
-      <PageHeader title="Connections" description="Live WebSocket connections and local channels." />
+      <PageHeader
+        title="Connections"
+        description="Live WebSocket connections and local channels."
+      />
       <TenantScopePicker
         serverId={scope.serverId}
         tenantId={scope.tenantId}
@@ -66,7 +69,9 @@ export default function ConnectionsPage() {
       />
       {connError ? (
         <p className="mb-4 text-sm text-destructive">
-          {connErr instanceof Error ? connErr.message : "Failed to load connections."}
+          {connErr instanceof Error
+            ? connErr.message
+            : "Failed to load connections."}
         </p>
       ) : null}
       {chError ? (
@@ -96,8 +101,12 @@ export default function ConnectionsPage() {
                   <TableRow key={c.id}>
                     <TableCell className="font-mono text-xs">{c.id}</TableCell>
                     <TableCell>{c.state}</TableCell>
-                    <TableCell className="font-mono text-xs">{c.remote_addr}</TableCell>
-                    <TableCell className="max-w-[200px] truncate text-xs">{c.user_agent}</TableCell>
+                    <TableCell className="font-mono text-xs">
+                      {c.remote_addr}
+                    </TableCell>
+                    <TableCell className="max-w-[200px] truncate text-xs">
+                      {c.user_agent}
+                    </TableCell>
                     <TableCell className="font-mono text-xs">
                       ↑{c.messages_sent} ↓{c.messages_recv}
                     </TableCell>
@@ -124,7 +133,9 @@ export default function ConnectionsPage() {
                     <TableCell className="font-mono">{ch.name}</TableCell>
                     <TableCell>{ch.local_subscriptions}</TableCell>
                     <TableCell>{ch.is_active ? "yes" : "no"}</TableCell>
-                    <TableCell className="text-xs text-muted">{ch.last_activity}</TableCell>
+                    <TableCell className="text-xs text-muted">
+                      {ch.last_activity}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

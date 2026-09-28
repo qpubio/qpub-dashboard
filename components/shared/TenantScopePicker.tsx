@@ -1,6 +1,13 @@
 "use client";
 
-import { Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@qpub/qui/lite";
+import {
+  Label,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@qpub/qui/lite";
 import { PLATFORM_TENANT_ID } from "@/lib/hooks/useTenantScope";
 import type { Tenant } from "@/lib/control/types";
 
@@ -20,7 +27,11 @@ export function TenantScopePicker({
   includePlatform?: boolean;
 }) {
   if (!serverId) {
-    return <p className="mb-4 text-sm text-muted">Select a server in the status bar.</p>;
+    return (
+      <p className="mb-4 text-sm text-muted">
+        Select a server in the status bar.
+      </p>
+    );
   }
 
   return (
@@ -32,11 +43,15 @@ export function TenantScopePicker({
         disabled={isLoading || (!includePlatform && tenants.length === 0)}
       >
         <SelectTrigger className="min-w-[220px] font-mono text-sm">
-          <SelectValue placeholder={isLoading ? "Loading tenants…" : "Select tenant"} />
+          <SelectValue
+            placeholder={isLoading ? "Loading tenants…" : "Select tenant"}
+          />
         </SelectTrigger>
         <SelectContent>
           {includePlatform ? (
-            <SelectItem value={PLATFORM_TENANT_ID}>Platform (internal jobs)</SelectItem>
+            <SelectItem value={PLATFORM_TENANT_ID}>
+              Platform (internal jobs)
+            </SelectItem>
           ) : null}
           {tenants.map((t) => (
             <SelectItem key={t.id} value={t.id}>

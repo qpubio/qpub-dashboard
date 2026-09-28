@@ -3,7 +3,13 @@
 import { useState } from "react";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { useActiveServerId } from "@/components/shared/ServerScopePicker";
-import { LogViewer, Prompt, Terminal, TerminalBody, TerminalTitleBar } from "@qpub/qui/lite";
+import {
+  LogViewer,
+  Prompt,
+  Terminal,
+  TerminalBody,
+  TerminalTitleBar,
+} from "@qpub/qui/lite";
 import {
   Select,
   SelectContent,
@@ -28,7 +34,11 @@ export default function ConsolePage() {
     const trimmed = command.trim();
     if (trimmed) {
       const parts = trimmed.split(/\s+/);
-      await execute(parts[0].toUpperCase(), parts.slice(1).join(" ") || path, body);
+      await execute(
+        parts[0].toUpperCase(),
+        parts.slice(1).join(" ") || path,
+        body,
+      );
       return;
     }
     await execute(method, path, body);
@@ -105,7 +115,7 @@ export default function ConsolePage() {
       </div>
       <textarea
         className="h-24 w-full border border-border bg-background p-2 font-mono text-xs"
-        placeholder='Request body JSON (POST/PUT)'
+        placeholder="Request body JSON (POST/PUT)"
         value={body}
         onChange={(e) => setBody(e.target.value)}
       />

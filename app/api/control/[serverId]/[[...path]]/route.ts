@@ -45,7 +45,10 @@ async function forward(req: NextRequest, ctx: Ctx, method: string) {
         headers: { "Content-Type": "application/json" },
       });
     }
-    return NextResponse.json({ error: "Control proxy failed" }, { status: 502 });
+    return NextResponse.json(
+      { error: "Control proxy failed" },
+      { status: 502 },
+    );
   }
 }
 

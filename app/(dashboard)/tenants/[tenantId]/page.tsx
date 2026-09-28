@@ -19,7 +19,11 @@ export default function TenantDetailPage() {
   const { data: stats } = useQuery({
     queryKey: ["tenant-stats", serverId, tenantId],
     enabled: Boolean(serverId && tenantId),
-    queryFn: () => controlGet<{ stats: Record<string, number> }>(serverId!, `tenants/${tenantId}/stats`),
+    queryFn: () =>
+      controlGet<{ stats: Record<string, number> }>(
+        serverId!,
+        `tenants/${tenantId}/stats`,
+      ),
     refetchInterval: 2000,
   });
 
@@ -45,7 +49,8 @@ export default function TenantDetailPage() {
   }
 
   async function deleteTenant() {
-    if (!serverId || !confirm("Delete this tenant and all associated data?")) return;
+    if (!serverId || !confirm("Delete this tenant and all associated data?"))
+      return;
     await controlMutate(serverId, "DELETE", `tenants/${tenantId}`);
     router.push("/tenants");
   }
@@ -59,10 +64,16 @@ export default function TenantDetailPage() {
         description="Realtime stats and rate limits."
         actions={
           <div className="flex gap-2">
-            <Button variant="light" onClick={() => router.push(`/api-keys?tenant=${tenantId}`)}>
+            <Button
+              variant="light"
+              onClick={() => router.push(`/api-keys?tenant=${tenantId}`)}
+            >
               API keys
             </Button>
-            <Button variant="light" onClick={() => router.push(`/queues?tenant=${tenantId}`)}>
+            <Button
+              variant="light"
+              onClick={() => router.push(`/queues?tenant=${tenantId}`)}
+            >
               Queues
             </Button>
             <Button variant="ghost" onClick={deleteTenant}>
@@ -82,15 +93,24 @@ export default function TenantDetailPage() {
           { label: "msg:drop", value: formatNum(s["msg:drop"]) },
         ]}
       />
-      <form onSubmit={saveLimits} className="max-w-md space-y-3 border border-border p-4">
+      <form
+        onSubmit={saveLimits}
+        className="max-w-md space-y-3 border border-border p-4"
+      >
         <h2 className="font-mono text-sm font-semibold">Rate limits</h2>
         <div>
           <Label>Inbound / sec (-1 unlimited)</Label>
-          <Input name="inbound" defaultValue={limits?.inbound_per_second ?? -1} />
+          <Input
+            name="inbound"
+            defaultValue={limits?.inbound_per_second ?? -1}
+          />
         </div>
         <div>
           <Label>Outbound / sec (-1 unlimited)</Label>
-          <Input name="outbound" defaultValue={limits?.outbound_per_second ?? -1} />
+          <Input
+            name="outbound"
+            defaultValue={limits?.outbound_per_second ?? -1}
+          />
         </div>
         <Button type="submit">Save limits</Button>
       </form>

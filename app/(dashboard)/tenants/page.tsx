@@ -43,7 +43,10 @@ export default function TenantsPage() {
     queryKey: ["tenants", serverId],
     enabled: Boolean(serverId),
     queryFn: () =>
-      controlGet<{ tenants: Tenant[]; pagination: Pagination }>(serverId!, "tenants"),
+      controlGet<{ tenants: Tenant[]; pagination: Pagination }>(
+        serverId!,
+        "tenants",
+      ),
   });
 
   async function createTenant() {
@@ -87,14 +90,19 @@ export default function TenantsPage() {
             {(data?.tenants ?? []).map((t) => (
               <TableRow key={t.id}>
                 <TableCell>
-                  <Link href={`/tenants/${t.id}`} className="font-mono underline-offset-2 hover:underline">
+                  <Link
+                    href={`/tenants/${t.id}`}
+                    className="font-mono underline-offset-2 hover:underline"
+                  >
                     {t.id}
                   </Link>
                 </TableCell>
                 <TableCell>
                   <Badge variant="flat">{t.status}</Badge>
                 </TableCell>
-                <TableCell className="text-xs text-muted">{t.created_at}</TableCell>
+                <TableCell className="text-xs text-muted">
+                  {t.created_at}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

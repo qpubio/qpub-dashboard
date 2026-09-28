@@ -21,7 +21,10 @@ export function ServerScopePicker({ required }: { required?: boolean }) {
   }
 
   return (
-    <Select value={serverScope} onValueChange={(v) => setServerScope(v as "all" | string)}>
+    <Select
+      value={serverScope}
+      onValueChange={(v) => setServerScope(v as "all" | string)}
+    >
       <SelectTrigger className="w-[200px]">
         <SelectValue placeholder="Server scope" />
       </SelectTrigger>

@@ -43,7 +43,9 @@ export default function LoginPage() {
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="font-mono">QPub Dashboard</CardTitle>
-          <CardDescription>Sign in to your self-hosted control plane.</CardDescription>
+          <CardDescription>
+            Sign in to your self-hosted control plane.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={onSubmit} className="space-y-4">

@@ -26,10 +26,11 @@ export default function SettingsPage() {
           <dd>{env.appUrl}</dd>
         </div>
         <p className="pt-2 text-xs text-muted">
-          Rotate credentials via DASHBOARD_ADMIN_PASSWORD_HASH and DASHBOARD_SECRET. Control API
-          tokens are stored encrypted in SQLite. When CONTROL_API_TOKEN or QPUB_SERVER_CONTROL_URL
-          change in .env, restart the dashboard to sync them into the server registry (or edit under
-          Servers).
+          Rotate credentials via DASHBOARD_ADMIN_PASSWORD_HASH and
+          DASHBOARD_SECRET. Control API tokens are stored encrypted in SQLite.
+          When CONTROL_API_TOKEN or QPUB_SERVER_CONTROL_URL change in .env,
+          restart the dashboard to sync them into the server registry (or edit
+          under Servers).
         </p>
       </dl>
     </div>
