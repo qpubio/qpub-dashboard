@@ -49,7 +49,7 @@ export function useTenantScope(options: TenantScopeOptions = {}) {
       return;
     }
     if (tenants[0]) {
-      setTenantScope(String(tenants[0].id));
+      setTenantScope(tenants[0].id);
     }
   }, [stored, searchParams, tenants, defaultPlatform, includePlatform, setTenantScope]);
 
@@ -58,7 +58,7 @@ export function useTenantScope(options: TenantScopeOptions = {}) {
     const fromUrl = searchParams.get("tenant");
     if (fromUrl) return fromUrl;
     if (defaultPlatform && includePlatform) return PLATFORM_TENANT_ID;
-    if (tenants[0]) return String(tenants[0].id);
+    if (tenants[0]) return tenants[0].id;
     return null;
   }, [stored, searchParams, defaultPlatform, includePlatform, tenants]);
 

@@ -39,7 +39,7 @@ export function TenantScopePicker({
             <SelectItem value={PLATFORM_TENANT_ID}>Platform (internal jobs)</SelectItem>
           ) : null}
           {tenants.map((t) => (
-            <SelectItem key={String(t.id)} value={String(t.id)}>
+            <SelectItem key={t.id} value={t.id}>
               {t.id}
               {t.status !== "active" ? ` · ${t.status}` : ""}
             </SelectItem>

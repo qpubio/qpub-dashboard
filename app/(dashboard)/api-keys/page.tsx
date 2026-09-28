@@ -55,7 +55,7 @@ export default function ApiKeysPage() {
     qc.invalidateQueries({ queryKey: ["keys", serverId, tenantId] });
   }
 
-  async function revoke(id: number) {
+  async function revoke(id: string) {
     if (!serverId || !tenantId || !confirm("Revoke this key?")) return;
     await controlMutate(serverId, "DELETE", `tenants/${tenantId}/keys/${id}`);
     qc.invalidateQueries({ queryKey: ["keys", serverId, tenantId] });
@@ -104,7 +104,7 @@ export default function ApiKeysPage() {
             {(data ?? []).map((k) => (
               <TableRow key={k.id}>
                 <TableCell>{k.name}</TableCell>
-                <TableCell className="font-mono text-xs">{k.public_id}</TableCell>
+                <TableCell className="font-mono text-xs">{k.id}</TableCell>
                 <TableCell>{k.status}</TableCell>
                 <TableCell>
                   <Button variant="ghost" onClick={() => revoke(k.id)}>

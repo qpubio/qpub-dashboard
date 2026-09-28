@@ -11,21 +11,21 @@ import { formatNum } from "@/lib/utils";
 
 export default function TenantDetailPage() {
   const params = useParams();
-  const tenantId = Number(params.tenantId);
+  const tenantId = String(params.tenantId ?? "");
   const serverId = useActiveServerId();
   const router = useRouter();
   const qc = useQueryClient();
 
   const { data: stats } = useQuery({
     queryKey: ["tenant-stats", serverId, tenantId],
-    enabled: Boolean(serverId),
+    enabled: Boolean(serverId && tenantId),
     queryFn: () => controlGet<{ stats: Record<string, number> }>(serverId!, `tenants/${tenantId}/stats`),
     refetchInterval: 2000,
   });
 
   const { data: limits } = useQuery({
     queryKey: ["tenant-limits", serverId, tenantId],
-    enabled: Boolean(serverId),
+    enabled: Boolean(serverId && tenantId),
     queryFn: () =>
       controlGet<{ inbound_per_second: number; outbound_per_second: number }>(
         serverId!,

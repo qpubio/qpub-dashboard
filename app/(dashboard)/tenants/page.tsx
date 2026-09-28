@@ -47,8 +47,8 @@ export default function TenantsPage() {
   });
 
   async function createTenant() {
-    if (!serverId || !newId) return;
-    await controlMutate(serverId, "POST", "tenants", { id: Number(newId) });
+    if (!serverId || !newId.trim()) return;
+    await controlMutate(serverId, "POST", "tenants", { id: newId.trim() });
     setCreateOpen(false);
     setNewId("");
     qc.invalidateQueries({ queryKey: ["tenants", serverId] });
@@ -108,7 +108,11 @@ export default function TenantsPage() {
           </DialogHeader>
           <div>
             <Label>Tenant ID</Label>
-            <Input value={newId} onChange={(e) => setNewId(e.target.value)} placeholder="1" />
+            <Input
+              value={newId}
+              onChange={(e) => setNewId(e.target.value)}
+              placeholder="Project public id (hash) or numeric id"
+            />
           </div>
           <DialogFooter>
             <Button variant="light" onClick={() => setCreateOpen(false)}>

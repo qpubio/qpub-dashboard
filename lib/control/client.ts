@@ -108,31 +108,31 @@ export async function listTenants(serverId: string, page = 1, perPage = 20) {
   );
 }
 
-export async function getTenant(serverId: string, tenantId: number) {
+export async function getTenant(serverId: string, tenantId: string) {
   return controlFetch<Tenant>(serverCreds(serverId), "GET", `/control/v1/tenants/${tenantId}`);
 }
 
-export async function createTenant(serverId: string, id: number) {
+export async function createTenant(serverId: string, id: string) {
   return controlFetch<Tenant>(serverCreds(serverId), "POST", "/control/v1/tenants", { id });
 }
 
-export async function deleteTenant(serverId: string, tenantId: number) {
-  return controlFetch<{ status: string; tenant_id: number }>(
+export async function deleteTenant(serverId: string, tenantId: string) {
+  return controlFetch<{ status: string; tenant_id: string }>(
     serverCreds(serverId),
     "DELETE",
     `/control/v1/tenants/${tenantId}`,
   );
 }
 
-export async function getTenantStats(serverId: string, tenantId: number) {
-  return controlFetch<{ tenant_id: number; stats: StatsMap }>(
+export async function getTenantStats(serverId: string, tenantId: string) {
+  return controlFetch<{ tenant_id: string; stats: StatsMap }>(
     serverCreds(serverId),
     "GET",
     `/control/v1/tenants/${tenantId}/stats`,
   );
 }
 
-export async function getLimits(serverId: string, tenantId: number) {
+export async function getLimits(serverId: string, tenantId: string) {
   return controlFetch<Limits>(
     serverCreds(serverId),
     "GET",
@@ -142,7 +142,7 @@ export async function getLimits(serverId: string, tenantId: number) {
 
 export async function setLimits(
   serverId: string,
-  tenantId: number,
+  tenantId: string,
   inbound: number,
   outbound: number,
 ) {
@@ -152,7 +152,7 @@ export async function setLimits(
   });
 }
 
-export async function listKeys(serverId: string, tenantId: number) {
+export async function listKeys(serverId: string, tenantId: string) {
   const res = await controlFetch<{ keys: APIKey[] }>(
     serverCreds(serverId),
     "GET",
@@ -163,7 +163,7 @@ export async function listKeys(serverId: string, tenantId: number) {
 
 export async function createKey(
   serverId: string,
-  tenantId: number,
+  tenantId: string,
   body: { name: string; permission?: unknown; status?: string },
 ) {
   return controlFetch<APIKey>(
@@ -176,8 +176,8 @@ export async function createKey(
 
 export async function updateKey(
   serverId: string,
-  tenantId: number,
-  keyId: number,
+  tenantId: string,
+  keyId: string,
   body: { name: string; permission?: unknown; status?: string },
 ) {
   return controlFetch<APIKey>(
@@ -188,7 +188,7 @@ export async function updateKey(
   );
 }
 
-export async function deleteKey(serverId: string, tenantId: number, keyId: number) {
+export async function deleteKey(serverId: string, tenantId: string, keyId: string) {
   return controlFetch<void>(
     serverCreds(serverId),
     "DELETE",
@@ -196,7 +196,7 @@ export async function deleteKey(serverId: string, tenantId: number, keyId: numbe
   );
 }
 
-export async function listQueues(serverId: string, tenantId: number, page = 1) {
+export async function listQueues(serverId: string, tenantId: string, page = 1) {
   return controlFetch<{ queues: QueueSummary[]; pagination: Pagination }>(
     serverCreds(serverId),
     "GET",
@@ -204,7 +204,7 @@ export async function listQueues(serverId: string, tenantId: number, page = 1) {
   );
 }
 
-export async function listWorkers(serverId: string, tenantId: number, page = 1) {
+export async function listWorkers(serverId: string, tenantId: string, page = 1) {
   return controlFetch<{ workers: WorkerSummary[]; pagination: Pagination }>(
     serverCreds(serverId),
     "GET",
@@ -214,7 +214,7 @@ export async function listWorkers(serverId: string, tenantId: number, page = 1) 
 
 export async function listJobs(
   serverId: string,
-  tenantId: number,
+  tenantId: string,
   queueName: string,
   status?: string,
 ) {
@@ -226,7 +226,7 @@ export async function listJobs(
   );
 }
 
-export async function listConnections(serverId: string, tenantId: number, page = 1) {
+export async function listConnections(serverId: string, tenantId: string, page = 1) {
   return controlFetch<{ connections: ConnectionSummary[]; pagination: Pagination }>(
     serverCreds(serverId),
     "GET",
@@ -234,7 +234,7 @@ export async function listConnections(serverId: string, tenantId: number, page =
   );
 }
 
-export async function listChannels(serverId: string, tenantId: number, page = 1) {
+export async function listChannels(serverId: string, tenantId: string, page = 1) {
   return controlFetch<{ channels: ChannelSummary[]; pagination: Pagination }>(
     serverCreds(serverId),
     "GET",

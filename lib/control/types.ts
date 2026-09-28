@@ -7,23 +7,24 @@ export type Pagination = {
   last_page: number;
 };
 
+/** External control refs are hash PublicIDs (base62), not raw snowflake ints. Platform tenant is "0". */
 export type Tenant = {
-  id: number;
+  id: string;
   status: string;
   created_at: string;
 };
 
 export type Limits = {
-  tenant_id: number;
+  tenant_id: string;
   inbound_per_second: number;
   outbound_per_second: number;
   updated_at?: string;
 };
 
 export type APIKey = {
-  id: number;
-  public_id: string;
-  project_id: number;
+  /** Public hash id (same as former public_id). */
+  id: string;
+  project_id: string;
   name: string;
   secret_key?: string;
   permission: unknown;
@@ -59,7 +60,7 @@ export type QueueSummary = {
 
 export type WorkerSummary = {
   id: string;
-  project_id: number;
+  project_id: string;
   name: string;
   queues: string[];
   last_seen_at: string;
@@ -102,7 +103,7 @@ export type MetricsRollup = {
 
 export type ConnectionSummary = {
   id: string;
-  tenant_id: number;
+  tenant_id: string;
   remote_addr: string;
   user_agent: string;
   state: string;
@@ -120,7 +121,7 @@ export type ChannelSummary = {
   id: string;
   name: string;
   full_name: string;
-  tenant_id: number;
+  tenant_id: string;
   instance_id: string;
   local_subscriptions: number;
   is_active: boolean;
