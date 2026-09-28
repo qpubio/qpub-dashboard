@@ -4,3 +4,5 @@ data
 .env
 .env.local
 *.db
+
+tsconfig.tsbuildinfo
