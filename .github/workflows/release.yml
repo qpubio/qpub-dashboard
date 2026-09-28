@@ -1,20 +1,15 @@
-name: Create Release
+name: Create Release Tag
 
 on:
   push:
     branches:
       - main
 
-env:
-  REGISTRY: ghcr.io
-  APP_NAME: qpub-dashboard
-
 jobs:
-  tag-and-publish:
+  tag-release:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      packages: write
 
     steps:
       - name: Checkout repository
@@ -34,58 +29,23 @@ jobs:
           echo "✅ Found version: $VERSION"
 
       - name: Create and push git tag
-        id: tag
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           if git rev-parse "${{ steps.version.outputs.version }}" >/dev/null 2>&1; then
-            echo "Tag ${{ steps.version.outputs.version }} already exists — skipping tag/image"
-            echo "created=false" >> $GITHUB_OUTPUT
+            echo "Tag ${{ steps.version.outputs.version }} already exists — skipping"
             exit 0
           fi
           git tag -a "${{ steps.version.outputs.version }}" -m "Release ${{ steps.version.outputs.version }}"
           git push origin "${{ steps.version.outputs.version }}"
-          echo "created=true" >> $GITHUB_OUTPUT
-
-      - name: Set up Docker Buildx
-        if: steps.tag.outputs.created == 'true'
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to GitHub Container Registry
-        if: steps.tag.outputs.created == 'true'
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Docker image
-        if: steps.tag.outputs.created == 'true'
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: true
-          tags: |
-            ${{ env.REGISTRY }}/qpubio/${{ env.APP_NAME }}:${{ steps.version.outputs.version }}
-            ${{ env.REGISTRY }}/qpubio/${{ env.APP_NAME }}:latest
-          provenance: false
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
       - name: Create GitHub Release
-        if: steps.tag.outputs.created == 'true'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.version.outputs.version }}
           name: Release ${{ steps.version.outputs.version }}
           body: |
             Release ${{ steps.version.outputs.version }}
-
-            Self-hosted control plane for [qpub-server](https://github.com/qpubio/qpub-server).
-
-            ```bash
-            docker pull ghcr.io/qpubio/qpub-dashboard:${{ steps.version.outputs.version }}
-            ```
 
             Tagged from the version header in `CHANGELOG.md`.
           skip_if_exists: true
