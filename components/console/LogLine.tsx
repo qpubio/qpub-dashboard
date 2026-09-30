@@ -137,7 +137,9 @@ export const LogLine = memo(function LogLine({
           {log.queue?.worker_name && (
             <div>
               Worker:{" "}
-              <span className="text-foreground/90">{log.queue.worker_name}</span>
+              <span className="text-foreground/90">
+                {log.queue.worker_name}
+              </span>
             </div>
           )}
           {log.queue?.status && (
@@ -179,7 +181,11 @@ export const LogLine = memo(function LogLine({
         </CollapsibleContent>
 
         <div className="absolute bottom-2 right-2.5 flex gap-1">
-          <CopyButton text={JSON.stringify(logToCopy)} size="sm" appearance="light" />
+          <CopyButton
+            text={JSON.stringify(logToCopy)}
+            size="sm"
+            appearance="light"
+          />
           <Tooltip>
             <TooltipTrigger asChild>
               <Button

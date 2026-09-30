@@ -17,7 +17,9 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           <SidebarTrigger className="-ml-1" />
           <span className="font-mono text-sm">qpub-dashboard</span>
         </header>
-        <div className="min-h-0 flex-1 overflow-auto p-4 md:p-6">{children}</div>
+        <div className="min-h-0 flex-1 overflow-auto p-4 md:p-6">
+          {children}
+        </div>
         <DashboardStatusBar />
       </SidebarInset>
       <CommandPalette />

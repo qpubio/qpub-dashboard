@@ -6,7 +6,11 @@ import { useQuery } from "@tanstack/react-query";
 import { controlGet } from "@/lib/hooks/useControl";
 import { useServers } from "@/lib/hooks/useServers";
 import type { APIKey } from "@/lib/control/types";
-import { hostFromControlUrl, socketOptions, apiKeyCredential } from "@/lib/console/sdkOptions";
+import {
+  hostFromControlUrl,
+  socketOptions,
+  apiKeyCredential,
+} from "@/lib/console/sdkOptions";
 
 interface ConsoleSocketContextValue {
   serverId: string;
@@ -26,7 +30,9 @@ const ConsoleSocketContext = createContext<ConsoleSocketContextValue | null>(
 export function useConsoleSocket() {
   const ctx = useContext(ConsoleSocketContext);
   if (!ctx) {
-    throw new Error("useConsoleSocket must be used within ConsoleSocketProvider");
+    throw new Error(
+      "useConsoleSocket must be used within ConsoleSocketProvider",
+    );
   }
   return ctx;
 }

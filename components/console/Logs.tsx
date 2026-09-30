@@ -75,9 +75,7 @@ export function Logs() {
         <Button
           variant="light"
           size="sm"
-          onClick={() =>
-            paused ? resume() : pause({ bufferMessages: false })
-          }
+          onClick={() => (paused ? resume() : pause({ bufferMessages: false }))}
         >
           {paused ? (
             <>
@@ -107,9 +105,7 @@ export function Logs() {
       >
         {messages.length === 0 ? (
           <div className="flex h-full items-center justify-center p-8 text-sm text-muted">
-            {ready
-              ? "Waiting for events on _logs…"
-              : "Connecting to _logs…"}
+            {ready ? "Waiting for events on _logs…" : "Connecting to _logs…"}
           </div>
         ) : (
           messages.map((message, i) => (

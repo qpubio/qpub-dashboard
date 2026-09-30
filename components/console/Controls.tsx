@@ -129,9 +129,7 @@ export function Controls() {
             type="button"
             className={cn(
               "rounded-sm px-2.5 py-1 transition-colors",
-              mode === "queue"
-                ? "bg-primary/15 text-foreground"
-                : "text-muted",
+              mode === "queue" ? "bg-primary/15 text-foreground" : "text-muted",
             )}
             onClick={() => setMode("queue")}
           >
@@ -262,9 +260,7 @@ export function Controls() {
               <Button
                 isIconOnly
                 className="absolute bottom-6 right-6 rounded-full"
-                aria-label={
-                  mode === "queue" ? "Enqueue job" : "Send message"
-                }
+                aria-label={mode === "queue" ? "Enqueue job" : "Send message"}
                 disabled={!canSend}
                 onClick={mode === "queue" ? handleEnqueue : handleSendMessage}
               >
