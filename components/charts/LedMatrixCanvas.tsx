@@ -113,8 +113,7 @@ export function LedMatrixCanvas({
     if (!canvas || !wrap) return;
 
     const style = getComputedStyle(wrap);
-    const padX =
-      parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
+    const padX = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
     const cssW = Math.max(1, wrap.clientWidth - padX);
     const cssH = Math.max(1, height);
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
