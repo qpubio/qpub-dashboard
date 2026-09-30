@@ -118,6 +118,16 @@ function timeToCol(t: number, t0: number, t1: number, cols: number): number {
   return clamp(Math.round(((t - t0) / (t1 - t0)) * (cols - 1)), 0, cols - 1);
 }
 
+/** Map pointer X in display CSS pixels to a column index. */
+export function pointerXToCol(
+  xCss: number,
+  displayWidthCss: number,
+  cols: number,
+): number {
+  if (cols <= 1 || displayWidthCss <= 0) return 0;
+  return clamp(Math.floor((xCss / displayWidthCss) * cols), 0, cols - 1);
+}
+
 /**
  * Rasterize series onto an LED grid for the rolling window.
  * Shared y-scale (min 0). Fill = columns under the path; line = Bresenham stair-step.

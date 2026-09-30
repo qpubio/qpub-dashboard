@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import {
   cssTokenColor,
   gridForSize,
+  pointerXToCol,
   rasterizeMatrix,
   readThemeColors,
   type ChartToken,
@@ -111,7 +112,10 @@ export function LedMatrixCanvas({
     const wrap = wrapRef.current;
     if (!canvas || !wrap) return;
 
-    const cssW = Math.max(1, wrap.clientWidth);
+    const style = getComputedStyle(wrap);
+    const padX =
+      parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
+    const cssW = Math.max(1, wrap.clientWidth - padX);
     const cssH = Math.max(1, height);
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const geom = gridForSize(cssW, cssH);
@@ -176,8 +180,8 @@ export function LedMatrixCanvas({
 
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
-    const { cols, pitch } = raster.geom;
-    const col = Math.max(0, Math.min(cols - 1, Math.floor(x / pitch)));
+    const { cols } = raster.geom;
+    const col = pointerXToCol(x, rect.width, cols);
     const t =
       raster.t0 + (raster.t1 - raster.t0) * (cols <= 1 ? 0 : col / (cols - 1));
 
@@ -210,7 +214,7 @@ export function LedMatrixCanvas({
     <div ref={wrapRef} className="relative px-3 pb-1">
       <canvas
         ref={canvasRef}
-        className="block max-w-full"
+        className="block"
         onMouseMove={onMove}
         onMouseLeave={() => setTips(null)}
       />
