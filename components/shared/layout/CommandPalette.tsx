@@ -53,7 +53,7 @@ export function CommandPalette() {
             Create tenant…
           </CommandItem>
           <CommandItem onSelect={() => go("/console")}>
-            Open debug console
+            Open console
           </CommandItem>
           <CommandItem onSelect={() => go("/servers")}>
             Manage servers

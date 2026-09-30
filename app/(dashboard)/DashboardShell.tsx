@@ -12,12 +12,12 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider>
       <DashboardSidebar />
-      <SidebarInset className="flex min-h-screen flex-col">
+      <SidebarInset className="flex h-svh min-h-0 flex-col overflow-hidden">
         <header className="flex h-10 shrink-0 items-center gap-2 border-b border-border px-3 md:hidden">
           <SidebarTrigger className="-ml-1" />
           <span className="font-mono text-sm">qpub-dashboard</span>
         </header>
-        <div className="flex-1 overflow-auto p-4 md:p-6">{children}</div>
+        <div className="min-h-0 flex-1 overflow-auto p-4 md:p-6">{children}</div>
         <DashboardStatusBar />
       </SidebarInset>
       <CommandPalette />

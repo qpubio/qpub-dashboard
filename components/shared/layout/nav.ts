@@ -20,6 +20,6 @@ export const navItems = [
   { href: "/api-keys", label: "API Keys", icon: Key },
   { href: "/monitoring", label: "Monitoring", icon: Activity },
   { href: "/events", label: "Events", icon: Radio },
-  { href: "/console", label: "Debug Console", icon: Terminal },
+  { href: "/console", label: "Console", icon: Terminal },
   { href: "/settings", label: "Settings", icon: Settings },
 ] as const;

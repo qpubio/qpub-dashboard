@@ -29,7 +29,7 @@ export function DashboardStatusBar() {
         : "warning";
 
   return (
-    <StatusBar className="border-t border-border">
+    <StatusBar className="shrink-0 border-t border-border">
       <StatusBarSegment tone={tone as "success" | "warning"}>
         ● {healthy}/{total} servers
       </StatusBarSegment>
