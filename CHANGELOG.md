@@ -5,6 +5,17 @@ All notable changes to QPub Dashboard will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.2.3] - 2026-09-30
+
+### Features
+
+- Console page with live socket logs, connection status, and publish/subscribe controls via `@qpub/sdk`
+- Queue REST helpers and SDK options driven by dashboard environment configuration
+
+### Changed
+
+- Production-oriented `.env.example` defaults and clearer console navigation labels
+
 ## [v0.2.2] - 2026-09-30
 
 ### Fixed
